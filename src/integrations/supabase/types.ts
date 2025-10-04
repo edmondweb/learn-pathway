@@ -14,6 +14,109 @@ export type Database = {
   }
   public: {
     Tables: {
+      courses: {
+        Row: {
+          created_at: string
+          description: string
+          duration: string | null
+          id: string
+          image_url: string | null
+          level: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          duration?: string | null
+          id?: string
+          image_url?: string | null
+          level?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          duration?: string | null
+          id?: string
+          image_url?: string | null
+          level?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      lessons: {
+        Row: {
+          content: string
+          course_id: string
+          created_at: string
+          duration: string | null
+          id: string
+          order_index: number
+          title: string
+        }
+        Insert: {
+          content: string
+          course_id: string
+          created_at?: string
+          duration?: string | null
+          id?: string
+          order_index: number
+          title: string
+        }
+        Update: {
+          content?: string
+          course_id?: string
+          created_at?: string
+          duration?: string | null
+          id?: string
+          order_index?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lessons_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_progress: {
+        Row: {
+          completed: boolean
+          completed_at: string | null
+          created_at: string
+          id: string
+          lesson_id: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          lesson_id: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          lesson_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_progress_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       Users: {
         Row: {
           created_at: string
