@@ -25,13 +25,8 @@ export default function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) {
-      navigate('/auth');
-      return;
-    }
-
     fetchCourses();
-  }, [user, navigate]);
+  }, [user]);
 
   const fetchCourses = async () => {
     try {

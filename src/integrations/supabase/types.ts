@@ -51,6 +51,7 @@ export type Database = {
           created_at: string
           duration: string | null
           id: string
+          module_name: string
           order_index: number
           title: string
         }
@@ -60,6 +61,7 @@ export type Database = {
           created_at?: string
           duration?: string | null
           id?: string
+          module_name?: string
           order_index: number
           title: string
         }
@@ -69,6 +71,7 @@ export type Database = {
           created_at?: string
           duration?: string | null
           id?: string
+          module_name?: string
           order_index?: number
           title?: string
         }

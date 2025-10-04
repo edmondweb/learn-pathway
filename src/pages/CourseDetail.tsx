@@ -25,6 +25,7 @@ interface Lesson {
   content: string;
   order_index: number;
   duration?: string;
+  module_name: string;
 }
 
 interface LessonProgress {
@@ -210,57 +211,71 @@ export default function CourseDetail() {
                   {lessons.length} lessons • {completedCount} completed
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-3">
-                {lessons.map((lesson) => {
-                  const isCompleted = progress.some(
-                    p => p.lesson_id === lesson.id && p.completed
-                  );
+              <CardContent className="space-y-6">
+                {Object.entries(
+                  lessons.reduce((acc, lesson) => {
+                    const module = lesson.module_name;
+                    if (!acc[module]) acc[module] = [];
+                    acc[module].push(lesson);
+                    return acc;
+                  }, {} as Record<string, Lesson[]>)
+                ).map(([moduleName, moduleLessons]) => (
+                  <div key={moduleName} className="space-y-3">
+                    <h3 className="text-lg font-semibold text-foreground border-b pb-2">
+                      {moduleName}
+                    </h3>
+                    {moduleLessons.map((lesson) => {
+                      const isCompleted = progress.some(
+                        p => p.lesson_id === lesson.id && p.completed
+                      );
 
-                  return (
-                    <Card
-                      key={lesson.id}
-                      className="transition-all hover:shadow-md cursor-pointer"
-                      onClick={() => toggleLessonComplete(lesson.id, isCompleted)}
-                    >
-                      <CardContent className="p-4">
-                        <div className="flex items-start gap-3">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="shrink-0 h-8 w-8 p-0"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              toggleLessonComplete(lesson.id, isCompleted);
-                            }}
-                          >
-                            {isCompleted ? (
-                              <CheckCircle2 className="h-5 w-5 text-primary" />
-                            ) : (
-                              <Circle className="h-5 w-5 text-muted-foreground" />
-                            )}
-                          </Button>
-                          
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between gap-2">
-                              <h4 className={`font-medium ${isCompleted ? 'text-muted-foreground line-through' : ''}`}>
-                                {lesson.title}
-                              </h4>
-                              {lesson.duration && (
-                                <div className="flex items-center gap-1 text-sm text-muted-foreground shrink-0">
-                                  <Clock className="h-3 w-3" />
-                                  <span>{lesson.duration}</span>
+                      return (
+                        <Card
+                          key={lesson.id}
+                          className="transition-all hover:shadow-md cursor-pointer"
+                          onClick={() => toggleLessonComplete(lesson.id, isCompleted)}
+                        >
+                          <CardContent className="p-4">
+                            <div className="flex items-start gap-3">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="shrink-0 h-8 w-8 p-0"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleLessonComplete(lesson.id, isCompleted);
+                                }}
+                              >
+                                {isCompleted ? (
+                                  <CheckCircle2 className="h-5 w-5 text-primary" />
+                                ) : (
+                                  <Circle className="h-5 w-5 text-muted-foreground" />
+                                )}
+                              </Button>
+                              
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-start justify-between gap-2">
+                                  <h4 className={`font-medium ${isCompleted ? 'text-muted-foreground line-through' : ''}`}>
+                                    {lesson.title}
+                                  </h4>
+                                  {lesson.duration && (
+                                    <div className="flex items-center gap-1 text-sm text-muted-foreground shrink-0">
+                                      <Clock className="h-3 w-3" />
+                                      <span>{lesson.duration}</span>
+                                    </div>
+                                  )}
                                 </div>
-                              )}
+                                <p className="text-sm text-muted-foreground mt-1">
+                                  {lesson.content}
+                                </p>
+                              </div>
                             </div>
-                            <p className="text-sm text-muted-foreground mt-1">
-                              {lesson.content}
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                ))}
               </CardContent>
             </Card>
           </div>
